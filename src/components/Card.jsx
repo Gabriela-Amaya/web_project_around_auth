@@ -1,6 +1,7 @@
-import { useState } from "react";
-
+import { useState, useContext } from "react";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 function Card({ card, onCardClick, onDeleteCard }) {
+  useContext(CurrentUserContext);
   const [isLiked, setIsLiked] = useState(false);
 
   function handleImageClick() {

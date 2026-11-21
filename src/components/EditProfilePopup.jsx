@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function EditProfilePopup({ user, isOpen, onClose, onUpdateUser }) {
-  const [name, setName] = useState("");
-  const [about, setAbout] = useState("");
-
-  useEffect(() => {
-    if (isOpen) {
-      setName(user.name);
-      setAbout(user.about);
-    }
-  }, [isOpen, user]);
+function EditProfileForm({ user, isOpen, onClose, onUpdateUser }) {
+  const [name, setName] = useState(user.name);
+  const [about, setAbout] = useState(user.about);
 
   function handleNameChange(event) {
     setName(event.target.value);
@@ -63,6 +56,10 @@ function EditProfilePopup({ user, isOpen, onClose, onUpdateUser }) {
       />
     </PopupWithForm>
   );
+}
+
+function EditProfilePopup(props) {
+  return <EditProfileForm key={props.isOpen ? "open" : "closed"} {...props} />;
 }
 
 export default EditProfilePopup;
