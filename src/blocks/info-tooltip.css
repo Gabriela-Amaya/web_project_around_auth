@@ -1,0 +1,44 @@
+.info-tooltip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 36px 40px;
+  text-align: center;
+}
+
+.info-tooltip__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 32px;
+  font-size: 90px;
+  font-weight: bold;
+  color: #000;
+}
+
+.info-tooltip__title {
+  max-width: 358px;
+  margin: 0;
+  color: #000;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 600px) {
+  .info-tooltip {
+    padding: 20px 18px 30px;
+  }
+
+  .info-tooltip__icon {
+    width: 100px;
+    height: 100px;
+    font-size: 70px;
+  }
+
+  .info-tooltip__title {
+    font-size: 20px;
+  }
+}

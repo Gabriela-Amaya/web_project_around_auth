@@ -1,14 +1,13 @@
 import { useState } from "react";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    console.log("Correo:", email);
-    console.log("Formulario de inicio de sesión enviado");
+    onLogin(email, password);
   }
 
   return (
@@ -17,6 +16,7 @@ function Login() {
 
       <form className="auth__form" onSubmit={handleSubmit}>
         <input
+          className="auth__input"
           type="email"
           placeholder="Correo electrónico"
           value={email}
@@ -25,6 +25,7 @@ function Login() {
         />
 
         <input
+          className="auth__input"
           type="password"
           placeholder="Contraseña"
           value={password}
@@ -32,7 +33,9 @@ function Login() {
           required
         />
 
-        <button type="submit">Iniciar sesión</button>
+        <button className="auth__button" type="submit">
+          Iniciar sesión
+        </button>
       </form>
     </div>
   );

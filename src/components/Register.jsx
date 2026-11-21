@@ -1,14 +1,13 @@
 import { useState } from "react";
 
-function Register() {
+function Register({ onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    console.log("Correo:", email);
-    console.log("Contraseña recibida");
+    onRegister(email, password);
   }
 
   return (
@@ -17,6 +16,7 @@ function Register() {
 
       <form className="auth__form" onSubmit={handleSubmit}>
         <input
+          className="auth__input"
           type="email"
           placeholder="Correo electrónico"
           value={email}
@@ -25,6 +25,7 @@ function Register() {
         />
 
         <input
+          className="auth__input"
           type="password"
           placeholder="Contraseña"
           value={password}
@@ -32,7 +33,9 @@ function Register() {
           required
         />
 
-        <button type="submit">Registrarse</button>
+        <button className="auth__button" type="submit">
+          Registrarse
+        </button>
       </form>
     </div>
   );
