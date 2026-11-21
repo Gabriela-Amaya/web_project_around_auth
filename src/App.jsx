@@ -12,7 +12,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import InfoTooltip from "./components/InfoTooltip";
-
+import avatarOriginal from "./images/image.jpg";
 import { register, authorize, getContent } from "./Utils/auth";
 
 function App() {
@@ -100,7 +100,7 @@ function App() {
   const [user, setUser] = useState({
     name: "Jacques Cousteau",
     about: "Explorador",
-    avatar,
+    avatar: avatarOriginal,
   });
 
   const [cards, setCards] = useState([
