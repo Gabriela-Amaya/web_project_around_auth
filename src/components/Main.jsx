@@ -10,6 +10,7 @@ function Main({
   onAddPlace,
   onCardClick,
   onDeleteCard,
+  onCardLike,
 }) {
   const user = useContext(CurrentUserContext);
   return (
@@ -25,6 +26,7 @@ function Main({
         cards={cards}
         onCardClick={onCardClick}
         onDeleteCard={onDeleteCard}
+        onCardLike={onCardLike}
       />
     </main>
   );

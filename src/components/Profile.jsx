@@ -3,7 +3,7 @@ function Profile({ user, onEditProfile, onEditAvatar, onAddPlace }) {
     <div className="profile">
       <section className="profile__image">
         <img
-          src={user.avatar}
+          src={user.avatar || undefined}
           alt={`Foto de perfil de ${user.name}`}
           className="profile__image-avatar"
         />

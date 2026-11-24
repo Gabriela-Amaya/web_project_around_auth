@@ -12,8 +12,9 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import InfoTooltip from "./components/InfoTooltip";
-import avatarOriginal from "./images/image.jpg";
-import { register, authorize, getContent } from "./Utils/auth";
+
+import { register, authorize, getContent } from "./utils/auth";
+import api from "./utils/api";
 
 import CurrentUserContext from "./contexts/CurrentUserContext";
 
@@ -101,43 +102,28 @@ function App() {
   }
 
   const [user, setUser] = useState({
-    name: "Jacques Cousteau",
-    about: "Explorador",
-    avatar: avatarOriginal,
+    name: "",
+    about: "",
+    avatar: "",
+    _id: "",
   });
 
-  const [cards, setCards] = useState([
-    {
-      id: 1,
-      name: "Valle de Yosemite",
-      link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
-    },
-    {
-      id: 2,
-      name: "Lago Louise",
-      link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lake-louise.jpg",
-    },
-    {
-      id: 3,
-      name: "Montañas Calvas",
-      link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/bald-mountains.jpg",
-    },
-    {
-      id: 4,
-      name: "Latemar",
-      link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/latemar.jpg",
-    },
-    {
-      id: 5,
-      name: "Parque Nacional de la Vanoise",
-      link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/vanoise.jpg",
-    },
-    {
-      id: 6,
-      name: "Lago di Braies",
-      link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
-    },
-  ]);
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cardsData]) => {
+        setUser(userData);
+        setCards(cardsData);
+      })
+      .catch((error) => {
+        console.error("Error al cargar los datos:", error);
+      });
+  }, [isLoggedIn]);
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
 
@@ -171,40 +157,67 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    setUser((currentUser) => ({
-      ...currentUser,
-      name: data.name,
-      about: data.about,
-    }));
-
-    handleClosePopups();
+    api
+      .editUserInfo(data)
+      .then((updatedUser) => {
+        setUser(updatedUser);
+        handleClosePopups();
+      })
+      .catch((error) => {
+        console.error("Error al actualizar el perfil:", error);
+      });
   }
 
   function handleUpdateAvatar(data) {
-    setUser((currentUser) => ({
-      ...currentUser,
-      avatar: data.avatar,
-    }));
-
-    handleClosePopups();
+    api
+      .updateAvatar(data.avatar)
+      .then((updatedUser) => {
+        setUser(updatedUser);
+        handleClosePopups();
+      })
+      .catch((error) => {
+        console.error("Error al actualizar el avatar:", error);
+      });
   }
 
   function handleAddPlace(data) {
-    const newCard = {
-      id: Date.now(),
-      name: data.name,
-      link: data.link,
-    };
-
-    setCards((currentCards) => [newCard, ...currentCards]);
-
-    handleClosePopups();
+    api
+      .addCard(data)
+      .then((newCard) => {
+        setCards((currentCards) => [newCard, ...currentCards]);
+        handleClosePopups();
+      })
+      .catch((error) => {
+        console.error("Error al agregar la tarjeta:", error);
+      });
   }
 
   function handleDeleteCard(cardId) {
-    setCards((currentCards) =>
-      currentCards.filter((card) => card.id !== cardId),
-    );
+    api
+      .deleteCard(cardId)
+      .then(() => {
+        setCards((currentCards) =>
+          currentCards.filter((card) => card._id !== cardId),
+        );
+      })
+      .catch((error) => {
+        console.error("Error al eliminar la tarjeta:", error);
+      });
+  }
+
+  function handleCardLike(card) {
+    api
+      .changeLikeCardStatus(card._id, !card.isLiked)
+      .then((updatedCard) => {
+        setCards((currentCards) =>
+          currentCards.map((currentCard) =>
+            currentCard._id === card._id ? updatedCard : currentCard,
+          ),
+        );
+      })
+      .catch((error) => {
+        console.error("Error al actualizar Me gusta:", error);
+      });
   }
 
   useEffect(() => {
@@ -272,6 +285,7 @@ function App() {
                     onAddPlace={handleOpenAddPlacePopup}
                     onCardClick={handleCardClick}
                     onDeleteCard={handleDeleteCard}
+                    onCardLike={handleCardLike}
                   />
 
                   <Footer />

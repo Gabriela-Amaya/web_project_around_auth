@@ -1,29 +1,33 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import CurrentUserContext from "../contexts/CurrentUserContext";
-function Card({ card, onCardClick, onDeleteCard }) {
-  useContext(CurrentUserContext);
-  const [isLiked, setIsLiked] = useState(false);
+function Card({ card, onCardClick, onDeleteCard, onCardLike }) {
+  const currentUser = useContext(CurrentUserContext);
 
+  const isOwn = card.owner === currentUser?._id;
+
+  const isLiked = card.isLiked;
   function handleImageClick() {
     onCardClick(card);
   }
 
   function handleDeleteClick() {
-    onDeleteCard(card.id);
+    onDeleteCard(card._id);
   }
 
   function handleLikeClick() {
-    setIsLiked(!isLiked);
+    onCardLike(card);
   }
 
   return (
     <li className="card">
-      <button
-        className="card__delete-button"
-        type="button"
-        aria-label="Eliminar tarjeta"
-        onClick={handleDeleteClick}
-      />
+      {isOwn && (
+        <button
+          className="card__delete-button"
+          type="button"
+          aria-label="Eliminar tarjeta"
+          onClick={handleDeleteClick}
+        />
+      )}
 
       <img
         className="card__image"
