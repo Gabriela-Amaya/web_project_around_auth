@@ -35,7 +35,7 @@ function App() {
 
     getContent(token)
       .then((data) => {
-        setUserEmail(data.email);
+        setUserEmail(data.data.email);
         setIsLoggedIn(true);
       })
 

@@ -1,8 +1,11 @@
 import logo from "../images/Vector.png";
 import line from "../images/Line.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Header({ isLoggedIn, email, onSignOut }) {
+  const { pathname } = useLocation();
+  const isSigninPage = pathname === "/signin";
+
   return (
     <header className="header">
       <img src={logo} alt="Around the U.S." className="header__logo" />
@@ -23,11 +26,9 @@ function Header({ isLoggedIn, email, onSignOut }) {
         ) : (
           <Link
             className="header__link"
-            to={window.location.pathname === "/signin" ? "/signup" : "/signin"}
+            to={isSigninPage ? "/signup" : "/signin"}
           >
-            {window.location.pathname === "/signin"
-              ? "Regístrate"
-              : "Iniciar sesión"}
+            {isSigninPage ? "Regístrate" : "Iniciar sesión"}
           </Link>
         )}
       </div>
